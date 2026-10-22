@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cache Memory Mapping Simulator</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>Cache Memory Mapping Simulator</h1>
+  <p>Direct • Associative • Set-Associative &nbsp;|&nbsp; COA Micro Project</p>
+</header>
+
+<main>
+  <section class="card" id="inputs">
+    <h2>1. Parameters</h2>
+    <div class="grid">
+      <label>Main Memory Size (bytes)<input id="mem" type="number" value="256" min="1"></label>
+      <label>Cache Size (bytes)<input id="cache" type="number" value="64" min="1"></label>
+      <label>Block Size (bytes)<input id="block" type="number" value="8" min="1"></label>
+      <label>Memory Address (decimal / 0x hex)<input id="addr" type="text" value="100"></label>
+      <label>Mapping Technique
+        <select id="mode">
+          <option value="direct">Direct Mapping</option>
+          <option value="assoc">Fully Associative Mapping</option>
+          <option value="set">Set-Associative Mapping</option>
+        </select>
+      </label>
+      <label id="waysBox" class="hidden">Ways (blocks per set)
+        <select id="ways"><option>2</option><option>4</option><option>8</option></select>
+      </label>
+    </div>
+    <div class="buttons">
+      <button id="btnSim" class="primary">▶ Simulate</button>
+      <button id="btnNext" class="accent">⏭ Next Step</button>
+      <button id="btnReset" class="danger">⟲ Reset</button>
+    </div>
+    <p id="error" class="error"></p>
+    <p id="derived" class="derived"></p>
+  </section>
+
+  <section class="card">
+    <h2>2. Step-by-Step Calculation</h2>
+    <div id="result" class="result idle">Press <b>Simulate</b> or <b>Next Step</b> to begin</div>
+    <div id="steps"></div>
+  </section>
+
+  <section class="card">
+    <h2>3. Main Memory → Cache Memory</h2>
+    <div class="legend">
+      <span><i class="sw sel"></i>Selected block / set</span>
+      <span><i class="sw hit"></i>HIT line</span>
+      <span><i class="sw miss"></i>MISS (block loaded here)</span>
+      <span><i class="sw inc"></i>Block currently in cache</span>
+    </div>
+    <div class="visual">
+      <div><h3>Main Memory</h3><div id="memView" class="list"></div></div>
+      <div class="arrow">➜</div>
+      <div><h3>Cache Memory</h3><div id="cacheView" class="list"></div></div>
+    </div>
+  </section>
+
+  <section class="card two">
+    <div>
+      <h2>Statistics</h2>
+      <div class="stats">
+        <div><b id="sHit">0</b>Hits</div>
+        <div><b id="sMiss">0</b>Misses</div>
+        <div><b id="sRatio">0%</b>Hit Ratio</div>
+      </div>
+      <h3>Access History</h3>
+      <ul id="log"></ul>
+    </div>
+    <div>
+      <h2>Viva Quick Notes</h2>
+      <ul class="notes">
+        <li><b>Direct:</b> each block has exactly one line → Index = Block No mod Lines.</li>
+        <li><b>Associative:</b> a block can go in any line → no index, Tag = Block No.</li>
+        <li><b>Set-Associative:</b> block maps to one set, any line in that set → Set = Block No mod Sets.</li>
+        <li><b>Address = Tag | Index/Set | Offset.</b></li>
+        <li><b>HIT</b> = valid line with matching tag. <b>MISS</b> = block fetched from memory (FIFO replacement if full).</li>
+      </ul>
+    </div>
+  </section>
+</main>
+<script src="script.js"></script>
+</body>
+</html>
